@@ -3,7 +3,7 @@
 from requests import Session as FreshSession
 
 def test():
-    def text_sought():
+    def body_text_sought():
         return "Our seals have zeal"
     
     def getter(url):
@@ -32,7 +32,7 @@ def test():
  
     r = getter('https://www.sealestate.com/')
     assert r.status_code == 200
-    assert text_sought() in r.text
+    assert body_text_sought() in r.text
 
 if __name__ == "__main__":
    test()
