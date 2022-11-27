@@ -1,0 +1,38 @@
+#! /usr/bin/env python
+
+from requests import Session as FreshSession
+
+def test():
+    def text_sought():
+        return "Our seals have zeal"
+    
+    def getter(url):
+        def requests_opts():
+            return { 'allow_redirects': False }
+        
+        net_response = FreshSession().get(url, **requests_opts())
+        return net_response
+
+    r = getter('http://sealestate.com/')
+    assert r.is_redirect
+    assert r.headers['Location'].startswith('https://')
+    assert r.headers['Location'] == 'https://sealestate.com/'
+
+    r = getter('https://sealestate.com/')
+    assert r.is_redirect
+    assert r.headers['Location'].startswith('https://')
+    assert r.headers['Location'].startswith('https://www')
+    assert r.headers['Location'] == 'https://www.sealestate.com/'
+
+    r = getter('http://www.sealestate.com/')
+    assert r.is_redirect
+    assert r.headers['Location'].startswith('https://')
+    assert r.headers['Location'].startswith('https://www')
+    assert r.headers['Location'] == 'https://www.sealestate.com/'
+ 
+    r = getter('https://www.sealestate.com/')
+    assert r.status_code == 200
+    assert text_sought() in r.text
+
+if __name__ == "__main__":
+   test()
